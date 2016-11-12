@@ -49,9 +49,9 @@ class RevisionVehiculo extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'id_vehiculo' => Yii::t('app', 'Id Vehiculo'),
-            'id_tipo_revision' => Yii::t('app', 'Id Tipo Revision'),
-            'fecha_revision' => Yii::t('app', 'Fecha Revision'),
+            'id_vehiculo' => Yii::t('app', 'Vehículo'),
+            'id_tipo_revision' => Yii::t('app', 'Tipo Revisión'),
+            'fecha_revision' => Yii::t('app', 'Fecha Revisión'),
             'detalles' => Yii::t('app', 'Detalles'),
             'ejecutor' => Yii::t('app', 'Ejecutor'),
         ];

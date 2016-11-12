@@ -35,19 +35,21 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
-        ['label' => 'Cubas', 'url' => ['/cuba/index']],
-        ['label' => 'Inicio', 'url' => ['/site/index']],
-        ['label' => 'Sobre Nosotros', 'url' => ['/site/about']],
-        ['label' => 'Contacto', 'url' => ['/site/contact']],
+        ['label' => Yii::t('app', 'Inicio'), 'url' => ['/site/index']],
+        ['label' => Yii::t('app', 'Sobre Nosotros'), 'url' => ['/site/about']],
+        ['label' => Yii::t('app', 'Contacto'), 'url' => ['/site/contact']],
+        ['label' => Yii::t('app', 'Cubas'), 'url' => ['/cuba/index'], 'items' => [
+            ['label' => Yii::t('app', 'Nueva'), 'url' => ['/cuba/create']],
+        ]],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Inscribirse', 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => 'Entrar', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => Yii::t('app', 'Inscribirse'), 'url' => ['/site/signup']];
+        $menuItems[] = ['label' => Yii::t('app', 'Entrar'), 'url' => ['/site/login']];
     } else {
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Salir (' . Yii::$app->user->identity->username . ')',
+                Yii::t('app', 'Salir') . ' (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link']
             )
             . Html::endForm()
@@ -61,7 +63,7 @@ AppAsset::register($this);
     NavBar::end();
     ?>
 
-    <div class="container">
+    <div class="container" >
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
@@ -73,7 +75,7 @@ AppAsset::register($this);
 <footer class="footer">
     <div class="container-fluid">
         <p class="col-lg-2">&copy; Casa Gaillard <?= date('Y') ?></p>
-        <p class="col-lg-7 text-center">Programado por <span class="label label-success">Roberto Díaz</span></p>
+        <p class="col-lg-7 text-center"><?= Yii::t('app', 'Programado por') ?> <span class="label label-success">Roberto Díaz</span></p>
         <p class="col-lg-3"><?= Yii::powered() ?></p>
     </div>
 </footer>

@@ -33,8 +33,8 @@ class Revision extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['cuba_id'], 'integer'],
-            [['fecha_revision', 'valida_hasta'], 'safe'],
+            //[['cuba_id'], 'integer'],
+            [['fecha_revision', 'valida_hasta', 'cuba_id'], 'safe'],
             [['descripcion', 'descripcion_proxima'], 'string'],
             [['autorizado'], 'string', 'max' => 45],
             [['cuba_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cuba::className(), 'targetAttribute' => ['cuba_id' => 'id']],
@@ -48,12 +48,12 @@ class Revision extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'cuba_id' => 'Cuba ID',
-            'fecha_revision' => 'Fecha Revision',
-            'descripcion' => 'Descripcion',
-            'valida_hasta' => 'Valida Hasta',
-            'descripcion_proxima' => 'Descripcion Proxima',
-            'autorizado' => 'Autorizado',
+            'cuba_id' => Yii::t('app', 'Cuba'),
+            'fecha_revision' => Yii::t('app', 'Fecha Revisión'),
+            'descripcion' => Yii::t('app','Descripción'),
+            'valida_hasta' => Yii::t('app','Válida Hasta'),
+            'descripcion_proxima' => Yii::t('app','Descripción Próxima'),
+            'autorizado' => Yii::t('app','Autorizado'),
         ];
     }
 

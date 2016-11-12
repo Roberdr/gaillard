@@ -17,15 +17,18 @@ class CubaSearch extends Cuba
 {
     public $comps;
     public $capacidad;
+    public $nombreMaterial;
+    public $matriculaPlat;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'longitud', 'ancho', 'alto'], 'integer'],
+            [['id', 'longitud', 'ancho', 'alto', 'comps', 'capacidad', 'num_cuadro'], 'integer'],
             [['cuba', 'material_exterior_id', 'fecha_construccion', 'plataforma_id',
-                'capacidad', 'comps'], 'safe'],
+                'nombreMaterial', 'matriculaPlat'], 'safe'],
         ];
     }
 
@@ -38,13 +41,6 @@ class CubaSearch extends Cuba
         return Model::scenarios();
     }
 
-    public function attributes()
-    {
-        return array_merge(parent::attributes(), [
-            'capacidad',
-            'comps'
-        ]);
-    }
 
     /**
      * Creates data provider instance with search query applied
@@ -55,12 +51,16 @@ class CubaSearch extends Cuba
      */
     public function search($params)
     {
-        $query = Cuba::find()->with([
-            'materialExterior',
-            'plataforma',
-            'compartimentos',
-            'revisiones'
-        ]);
+        $query = Cuba::find();
+        $subQuery = Compartimento::find()
+            ->select('cuba_id, COUNT(id) as comps')
+            ->groupBy('cuba_id');
+        $query->leftJoin(['numComp' => $subQuery], 'numComp.cuba_id = cuba.id');
+
+        $subQuery2 = Compartimento::find()
+            ->select('cuba_id, SUM(capacidad) as capacidad')
+            ->groupBy('cuba_id');
+        $query->leftJoin(['capComp' => $subQuery2], 'capComp.cuba_id = cuba.id');
 
         $totalCount = $query->count();
 
@@ -72,41 +72,87 @@ class CubaSearch extends Cuba
             ],
         ]);
 
-        $dataProvider->sort->attributes['capacidad'] = [
-            'asc' => ['capacidad' => SORT_ASC],
-            'desc' => ['capacidad' => SORT_DESC],
-        ];
-        $dataProvider->sort->attributes['comps'] = [
-            'asc' => ['comps' => SORT_ASC],
-            'desc' => ['comps' => SORT_DESC],
-        ];
+        $dataProvider->setSort([
+            'attributes' =>[
+                'cuba',
+                'num_cuadro',
+                'nombreMaterial' => [
+                    'asc' => ['material.material' => SORT_ASC],
+                    'desc' => ['material.material' => SORT_DESC],
+                    'label' => 'Material',
+                    //'default' => SORT_ASC
+                ],
+                'comps' => [
+                    'asc' => ['numComp.comps' => SORT_ASC],
+                    'desc' => ['numComp.comps' => SORT_DESC],
+                    'label' => 'Número de compartimentos',
+                    //'default' => SORT_ASC
+                ],
+                'capacidad' => [
+                    'asc' => ['capComp.capacidad' => SORT_ASC],
+                    'desc' => ['capComp.capacidad' => SORT_DESC],
+                    'label' => 'Capacidad',
+                    //'default' => SORT_ASC
+                ],
+                'matriculaPlat' => [
+                    'asc' => ['plataforma.matricula' => SORT_ASC],
+                    'desc' => ['plataforma.matricula' => SORT_DESC],
+                    'label' => 'Plataforma',
+                    //'default' => SORT_ASC
+                ],
+            ],
+        ]);
 
 
-        $this->load($params);
+        /*$query->joinWith([
+            'materialExterior',
+            'plataforma',
+        ],true ,[
+            'materialExterior' => 'LEFT JOIN',
+            'plataforma' => 'LEFT JOIN'
+        ]);*/
 
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+        //$query->addSelect('*', 'COUNT("compartimentos.id") on ("compartimentos"."cuba_id" = "cuba"."id") as comps');
+
+
+
+
+
+
+        if (!($this->load($params) && $this->validate())) {
+            /**
+             * The following line will allow eager loading with country data
+             * to enable sorting by country on initial loading of the grid.
+             */
+            $query->joinWith(['plataforma', 'materialExterior']);
             return $dataProvider;
         }
-
         
 
         $query->andFilterWhere([
-            'id' => $this->id,
-            'fecha_construccion' => $this->fecha_construccion,
-            'capacidad' => $this->capacidad,
-            'longitud' => $this->longitud,
-            'comps' => $this->comps,
-            'ancho' => $this->ancho,
-            'alto' => $this->alto,
+            'num_cuadro' => $this->num_cuadro,
         ]);
-
-        $query->andFilterWhere(['like', 'cuba', $this->cuba])
-            ->andFilterWhere(['like', 'material.material', $this->material_exterior_id])
-            ->andFilterWhere(['like', 'plataforma.matricula', $this->plataforma_id]);
+        
         
 
+        
+
+        $query->joinWith(['plataforma' => function ($q) {
+            $q->where('plataforma.matricula LIKE "%' . $this->matriculaPlat . '%"');
+        }
+        ]);
+
+        $query->joinWith(['materialExterior' => function ($q) {
+            $q->where('material.material LIKE "%' . $this->nombreMaterial . '%"');
+        }
+        ]);
+        $query->andFilterWhere(['like', 'cuba', $this->cuba])
+            ->andFilterWhere(['like', 'material.material', $this->nombreMaterial])
+            ->andFilterWhere(['like', 'plataforma.matricula', $this->matriculaPlat])
+            /*->andFilterWhere(['=', 'capacidad', $this->capacidad])*/;
+        
+        $query->andWhere(['numComp.comps' => $this->comps]);
+        $query->andWhere(['capComp.capacidad' => $this->capacidad]);
         
         return $dataProvider;
     }

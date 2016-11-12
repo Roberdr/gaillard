@@ -18,8 +18,9 @@ class RevisionSearch extends Revision
     public function rules()
     {
         return [
-            [['id', 'cuba_id'], 'integer'],
-            [['fecha_revision', 'descripcion', 'valida_hasta', 'descripcion_proxima', 'autorizado'], 'safe'],
+            [['id'], 'integer'],
+            [['fecha_revision', 'descripcion', 'valida_hasta', 'descripcion_proxima',
+                'autorizado', 'cuba_id'], 'safe'],
         ];
     }
 
@@ -60,17 +61,20 @@ class RevisionSearch extends Revision
             return $dataProvider;
         }
 
+        $query->joinWith('cuba');
+        
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'cuba_id' => $this->cuba_id,
+            //'cuba.cuba'=> $this->cuba,
             'fecha_revision' => $this->fecha_revision,
             'valida_hasta' => $this->valida_hasta,
+
         ]);
 
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
             ->andFilterWhere(['like', 'descripcion_proxima', $this->descripcion_proxima])
-            ->andFilterWhere(['like', 'autorizado', $this->autorizado]);
+            ->andFilterWhere(['like', 'autorizado', $this->autorizado])
+            ->andFilterWhere(['like', 'cuba.cuba', $this->cuba_id]);
 
         return $dataProvider;
     }

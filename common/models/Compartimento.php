@@ -13,7 +13,6 @@ use Yii;
  * @property integer $capacidad
  * @property integer $producto_id
  *
- * @property Boca[] $bocas
  * @property Cuba $cuba
  * @property Producto $producto
  * @property Material $materialInterior

@@ -22,10 +22,6 @@ use yii\db\ActiveRecord;
  * @property integer $longitud
  * @property integer $ancho
  * @property integer $alto
- * @property boolean $portadocumentos
- * @property boolean $portaplacas
- * @property boolean $portamangueras
- * @property integer $rompeolas
  * @property float $espesor_cuerpo
  * @property float $espesor_fondo
  * @property string $prueba_hidraulica
@@ -40,8 +36,12 @@ use yii\db\ActiveRecord;
  * @property integer $updated_by
  *
  * @property Compartimento[] $compartimentos
+ * @property integer $comps
+ * @property integer $capacidad
  * @property Material $materialExterior
+ * @property string $nombreMaterial
  * @property Plataforma $plataforma
+ * @property string $matriculaPlat
  * @property Revision[] $revisiones
  */
 class Cuba extends ActiveRecord
@@ -62,28 +62,20 @@ class Cuba extends ActiveRecord
     {
         return [
             [['cuba'], 'required'],
-            [['id', 'num_cuadro', 'material_exterior_id', 'plataforma_id', 'longitud', 'ancho', 'alto',
-                    'peso_bruto', 'tara', 'rompeolas', 'num_fabricacion' ], 'integer'],
+            [['id', 'material_exterior_id', 'plataforma_id', 'longitud', 'ancho', 'alto',
+                    'peso_bruto', 'tara', 'num_fabricacion', 'peso_max_producto' ], 'integer'],
             [['espesor_cuerpo', 'espesor_fondo', 'presion_prueba', 'presion_servicio_ADR'], 'number'],
             [['prueba_hidraulica'], 'date'],
-            [['portadocumentos', 'portaplacas', 'portamangueras'], 'boolean'],
             [['codigo'], 'string', 'max' => 7],
             [['cuba'], 'string', 'max' => 10],
             [['autoridad'], 'string', 'max' => 45],
             [['num_homologacion'], 'string', 'max' => 15],
             [['num_cuadro'], 'integer', 'min' => 0, 'max' => 9],
-            [['fecha_construccion',  'created_by', 'updated_by',
-                'comps', 'plataforma', 'capacidad'], 'safe'],
+            [['fecha_construccion',  'created_by', 'updated_by'], 'safe'],
             [['created_at', 'updated_at',], 'default', 'value' => date('Y-m-d'), 'on' => 'create']
         ];
     }
-
-    public function attributes()
-    {
-        return array_merge(parent::attributes(), [
-            //'cuba.comps',
-        ]);
-    }
+    
 
     /**
      * @inheritdoc
@@ -103,10 +95,6 @@ class Cuba extends ActiveRecord
             'longitud' => 'Longitud',
             'ancho' => 'Ancho',
             'alto' => 'Alto',
-            'portadocumentos' => 'Porta Documentos',
-            'portaplacas' => 'Porta Placas',
-            'portamangueras' => 'Porta Mangueras',
-            'rompeolas' => 'Rompeolas',
             'espesor_cuerpo' => 'Espesor cuerpo(mm)',
             'espesor_fondo' => 'Espesor fondo(mm)',
             'codigo_diseno' => 'Código de Diseño',
@@ -122,6 +110,8 @@ class Cuba extends ActiveRecord
             'carga_rigidez' => 'Carga Máx. Prueba Rigidez',
             'comps' => 'Número de Compartimentos',
             'capacidad' => 'Capacidad Total (l) ',
+            'nombreMaterial' => Yii::t('app', 'Material'),
+            'matriculaPlat' => Yii::t('app', 'Plataforma'),
         ];
     }
 
@@ -138,9 +128,23 @@ class Cuba extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getComps()
+    {
+        return $this->hasMany(Compartimento::className(), ['cuba_id' => 'id'])->count('compartimento.id');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getMaterialExterior()
     {
         return $this->hasOne(Material::className(), ['id' => 'material_exterior_id']);
+    }
+
+    /* Getter for Material Name */
+    public function getNombreMaterial()
+    {
+        return $this->materialExterior->material;
     }
 
     /**
@@ -149,7 +153,16 @@ class Cuba extends ActiveRecord
     public function getPlataforma()
     {
         return $this->hasOne(Plataforma::className(), ['id' => 'plataforma_id']);
-        
+    }
+
+    /* Getter for Matricula Plataforma*/
+    public function getMatriculaPlat()
+    {
+        if ($this->plataforma->matricula != null)
+        {
+            return $this->plataforma->matricula;
+        }
+        return '';
     }
 
    /**
@@ -160,18 +173,36 @@ class Cuba extends ActiveRecord
         return $this->hasMany(Revision::className(), ['cuba_id' => 'id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getComps()
-    {
-        return $this->hasMany(Compartimento::className(), ['cuba_id' => 'id'])->count('compartimento.id');
-    }
+    
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getCapacidad()
     {
         return $this->hasMany(Compartimento::className(), ['cuba_id' => 'id'])->sum('compartimento.capacidad');
+    }
+
+    public static function NextOrPrev($currentId)
+    {
+        $records = Cuba::find()->orderBy('cuba DESC')->all();
+        $next = null;
+        $prev = null;
+
+        foreach ($records as $i => $record) {
+            if ($record->id == $currentId) {
+                $next = isset($records[$i - 1]->id)?$records[$i - 1]->id:null;
+                $prev = isset($records[$i + 1]->id)?$records[$i + 1]->id:null;
+                break;
+            }
+        }
+        return ['next'=>$next, 'prev'=>$prev];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGrupos()
+    {
+        return $this->hasMany(Grupo::className(), ['cuba_id' => 'id']);
     }
 }
