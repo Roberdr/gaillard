@@ -1,0 +1,29 @@
+.site-index .jumbotron {
+    background: url('../images/Quimica.jpeg') no-repeat center center transparent;
+    background-size: cover;
+}
+
+.col1 {
+    background: url('../images/DSC_0122.JPG') no-repeat center center transparent;
+    width: 33.33%;
+    height: 180px;
+    background-size: cover;
+}
+
+.col2 {
+    background: url('../images/DSC_0297.JPG') no-repeat center center transparent;
+    width: 33.33%;
+    height: 180px;
+    background-size: cover;
+}
+
+.col3 {
+    background: url('../images/DSC_0298.JPG') no-repeat center center transparent;
+    width: 33.33%;
+    height: 180px;
+    background-size: cover;
+}
+
+.navbar-brand {
+    padding: 0px;
+}
