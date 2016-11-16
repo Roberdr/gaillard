@@ -70,10 +70,10 @@ class Grupo extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    /*public function getAccesorioGrupo()
+    public function getAccesorioGrupo()
     {
         return $this->hasMany(AccesorioGrupo::className(), ['grupo_id' => 'id']);
-    }*/
+    }
 
     /**
      * @return \yii\db\ActiveQuery

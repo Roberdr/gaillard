@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'export' => false,
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             [
                 'class'=>'kartik\grid\ExpandRowColumn',
@@ -36,17 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions'=>['class'=>'kartik-sheet-style'],
                 'expandOneOnly'=>true,
-                'detailUrl' => Url::to(["/accesorio/detalle", 'id' => 'accesorio_id']),
+                'detailUrl' => Url::to(["accesorio/detalle"]),
             ],
-            [
-                'attribute' => 'accesorio_id',
-                'label' => 'Accesorio',
-                'value' => 'tipoAccesorio.tipo_accesorio',
-            ],
-            [
-                'attribute' => 'material_id',
-                'value' => 'material.material',
-            ],
+            'nombreAccesorio',
+            'nombreMaterial',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

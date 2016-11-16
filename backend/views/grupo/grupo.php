@@ -92,7 +92,9 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="panel-heading" role="tab" id="<?= "heading$indexAccesorio"?>">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="<?= "#collapse$indexAccesorio"?>" aria-expanded="true" aria-controls="collapseOne">
-                        <?= $accesorio->tipoAccesorio->tipo_accesorio . " ---->  Material: " . $accesorio->material->material?>
+                        <?= $accesorio->tipoAccesorio->tipo_accesorio .
+                        " ---->  Material: " .
+                        $accesorio->material->material?>
                     </a>
                 </h4>
             </div>

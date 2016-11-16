@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Actualizar');
 
     <?= $this->render('_form', [
         'model' => $model,
-        'accesorioGrupo' => $accesorioGrupo,
+        //'accesorioGrupo' => $accesorioGrupo,
         'modelsDetalle' => $modelsDetalle,
     ]) ?>
 

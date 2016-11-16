@@ -73,6 +73,14 @@ class Accesorio extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getnombreMaterial()
+    {
+        return $this->material->material;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getTipoAccesorio()
     {
         return $this->hasOne(TipoAccesorio::className(), ['id' => 'tipo_accesorio_id']);
@@ -81,10 +89,18 @@ class Accesorio extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-   /* public function getAccesorioGrupo()
+    public function getNombreAccesorio()
+    {
+        return $this->tipoAccesorio->tipo_accesorio;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccesorioGrupo()
     {
         return $this->hasMany(AccesorioGrupo::className(), ['accesorio_id' => 'id']);
-    }*/
+    }
 
     /**
      * @return \yii\db\ActiveQuery

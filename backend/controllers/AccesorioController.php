@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\AccesorioSearch;
 use common\models\AccesorioGrupo;
 use common\models\DetalleAccesorio;
 use common\models\Grupo;
@@ -24,6 +25,7 @@ use yii\db\Exception;
  */
 class AccesorioController extends Controller
 {
+    private $flag;
     /**
      * @inheritdoc
      */
@@ -44,20 +46,13 @@ class AccesorioController extends Controller
      */
     public function actionIndex()
     {
-        $query = Accesorio::find();
+        $searchModel = new AccesorioSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $totalCount = $query->count();
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSize' => 7,
-                'totalCount' => $totalCount,
-            ],
-        ]);
+        
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'totalCount' => $totalCount,
+            'searchModel' => $searchModel,
         ]);
 
     }
@@ -77,7 +72,7 @@ class AccesorioController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
-                'pageSize' => 7,
+                'pageSize' => 6,
                 'totalCount' => $totalCount,
             ],
         ]);
@@ -145,10 +140,14 @@ class AccesorioController extends Controller
         if (isset($_POST['expandRowKey']))
         {
             $model = new ActiveDataProvider([
-                'query' => DetalleAccesorio::find()->with('accesorio.accesorioGrupo')->where(['accesorio_grupo.id' => $_POST['expandRowKey']])
+                'query' => DetalleAccesorio::find()->with('accesorio')->where(['accesorio_id' => $_POST['expandRowKey']]),
+                'pagination' => [
+                    'pageSize' => 6,
+/*                    'totalCount' => $totalCount,*/
+                ],
             ]);
             //$model2 = $model->accesorio->accesorio
-            return $this->renderPartial('_expand_row_detail', ['model'=>$model]);
+            return $this->renderPartial('_expand_row_detail', ['model'=>$model, 'accesorio_id' => $_POST['expandRowKey']]);
             //return $_POST['expandRowKey'];
         }else
         {
@@ -224,10 +223,10 @@ class AccesorioController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $accesorioGrupo = new AccesorioGrupo();
+        //$accesorioGrupo = new AccesorioGrupo();
         $modelsDetalle = $model->detalleAccesorio;
 
-        if ($model->load(Yii::$app->request->post()) and $accesorioGrupo->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())/* and $accesorioGrupo->load(Yii::$app->request->post())*/) {
 
             $oldIDs = ArrayHelper::map($modelsDetalle, 'id', 'id');
             $modelsDetalle = Model::createMultiple(DetalleAccesorio::className(), $modelsDetalle);
@@ -239,34 +238,36 @@ class AccesorioController extends Controller
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return ArrayHelper::merge(
                     ActiveForm::validateMultiple($modelsDetalle),
-                    ActiveForm::validate($model),
-                    ActiveForm::validate($accesorioGrupo)
+                    ActiveForm::validate($model)
+                    //ActiveForm::validate($accesorioGrupo)
                 );
             }
 
             // validate all models
             $valid = $model->validate();
-            $valid = $accesorioGrupo->validate() && $valid;
+            //$valid = $accesorioGrupo->validate() && $valid;
             $valid = Model::validateMultiple($modelsDetalle) && $valid;
 
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
-                    if ($flag = ($model->save(false) and $accesorioGrupo->save(false))) {
+                    if ($flag = ($model->save(false)/* and $accesorioGrupo->save(false)*/)) {
+                        //$flag = true;
                         if (!empty($deletedIDs)) {
                             DetalleAccesorio::deleteAll(['id' => $deletedIDs]);
                         }
                         foreach ($modelsDetalle as $modelDetalle) {
                             $modelDetalle->accesorio_id = $model->id;
-                            if (!($flag = $modelDetalle->save(false))) {
+                            if (!($modelDetalle->save(false))) {
+                                //$flag = true;
                                 $transaction->rollBack();
                                 break;
                             }
                         }
                     }
-                    if ($flag) {
+                    if (true) {
                         $transaction->commit();
-                        return $this->redirect(['index_grupo']);
+                        return $this->redirect(['index']);
                     }
                 } catch (Exception $e) {
                     $transaction->rollBack();
@@ -275,8 +276,9 @@ class AccesorioController extends Controller
         }
         return $this->render('update', [
             'model' => $model,
-            'accesorioGrupo' => $accesorioGrupo,
-            'modelsDetalle' => (empty($modelsDetalle)) ? [new DetalleAccesorio] : $modelsDetalle
+            //'accesorioGrupo' => $accesorioGrupo,
+            'modelsDetalle' => (empty($modelsDetalle)) ? [new DetalleAccesorio] : $modelsDetalle,
+            //'flag' => $flag,
         ]);
     }
 
