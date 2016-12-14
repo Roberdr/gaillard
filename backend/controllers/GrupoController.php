@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Cuba;
 use Yii;
 use common\models\Grupo;
 use common\models\GrupoSearch;
@@ -151,5 +152,11 @@ class GrupoController extends Controller
             'disableNext'=>$disableNext,
             'disablePrev'=>$disablePrev,
         ]);
+    }
+    
+    public function actionCubas()
+    {
+        $modelCuba = Cuba::find()->orderBy('cuba')->all();
+        
     }
 }

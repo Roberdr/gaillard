@@ -93,6 +93,7 @@ class OperacionController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'cuba_id' => $model->cuba_id,
             ]);
         }
     }

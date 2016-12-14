@@ -25,7 +25,7 @@ use common\models\Cuba;
             <?= $form->field($model, 'cuba_id')->widget(Select2::className(), [
                 'data' => ArrayHelper::map(Cuba::find()->all(),'id', 'cuba'),
                 'language' => 'es',
-                'options' => ['placeholder' => 'Selecciona una cuba ...', 'value' => $_GET['cuba_id']],
+                'options' => ['placeholder' => 'Selecciona una cuba ...', 'value' => isset($_GET['cuba_id'])? $_GET['cuba_id']:'' ],
                 'pluginOptions' => [
                     'allowClear' => true
                 ],

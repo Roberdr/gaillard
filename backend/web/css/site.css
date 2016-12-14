@@ -121,3 +121,9 @@ a.desc:after {
     padding: 2px;
     margin: auto;
 }*/
+
+
+/* evita que el título de los paneles salga recortado */
+div .panel {
+    padding: 0;
+}

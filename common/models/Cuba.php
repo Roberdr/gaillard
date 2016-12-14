@@ -205,4 +205,5 @@ class Cuba extends ActiveRecord
     {
         return $this->hasMany(Grupo::className(), ['cuba_id' => 'id']);
     }
+    
 }

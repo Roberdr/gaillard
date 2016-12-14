@@ -31,7 +31,7 @@ use common\models\Operario;
     <?= $form->field($model, 'cuba_id')->widget(Select2::className(), [
         'data' => ArrayHelper::map(Cuba::find()->orderBy('cuba')->all(),'id', 'cuba'),
         'language' => 'es',
-        'options' => ['placeholder' => 'Selecciona una cuba ...', 'value' => $cuba_id,],
+        'options' => ['placeholder' => 'Selecciona una cuba ...', 'value' => $cuba_id ? $cuba_id : '',],
         'pluginOptions' => [
             'allowClear' => true
         ],

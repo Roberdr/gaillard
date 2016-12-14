@@ -376,4 +376,24 @@ class CubaController extends Controller
         return $this->render('cuba-grupos', ['cubas' => $cubas]);
        
     }
+    
+    public function actionGrupos($id){
+        $index = Cuba::nextOrPrev($id);
+        $nextID = $index['next'];
+        $disableNext = ($nextID===null)?'disabled':null;
+        $prevID = $index['prev'];
+        $disablePrev = ($prevID===null)?'disabled':null;
+
+        $model = $this->findModel($id);
+        $grupos = Grupo::find()->where(['cuba_id' => $id])->joinWith('tipoGrupo')->orderBy('nombre_grupo')->all();
+
+        return $this->render('grupos', [
+            'model' => $model,
+            'grupos' => $grupos,
+            'nextID'=>$nextID,
+            'prevID'=>$prevID,
+            'disableNext'=>$disableNext,
+            'disablePrev'=>$disablePrev,
+        ]);
+    }
 }

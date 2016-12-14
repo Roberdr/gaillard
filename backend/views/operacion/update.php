@@ -10,6 +10,8 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Operacion */
+/* @var $cuba_id integer */
+
 
 $this->title = 'Actualizar Operación de Mantenimiento: ' . ' ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Operaciones', 'url' => ['index']];
@@ -22,6 +24,7 @@ $this->params['breadcrumbs'][] = 'Actualizar';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'cuba_id' => $cuba_id,
     ]) ?>
 
 </div>
