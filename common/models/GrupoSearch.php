@@ -58,6 +58,10 @@ class GrupoSearch extends Grupo
         ]);
 
         $dataProvider->setSort([
+            'defaultOrder' => [
+                'cubaNum' => SORT_ASC,
+                'compNum' => SORT_ASC,
+            ],
             'attributes' => [
                 'nombreGrupo' => [
                     'asc' => ['tipo_grupo.nombre_grupo' => SORT_ASC],

@@ -14,6 +14,9 @@ use yii\rbac\DbManager;
  * @property string $fecha_operacion
  * @property string $descripcion
  * @property integer $operario_id
+ * @property string $cubaNum
+ * @property string $nombreOperacion
+ * @property string $nombreOperario
  */
 class Operacion extends \yii\db\ActiveRecord
 {
@@ -43,12 +46,16 @@ class Operacion extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'cuba_id' => 'Cuba',
-            'operacion_id' => 'Operación',
-            'fecha_operacion' => 'Fecha Operación',
-            'descripcion' => 'Descripción',
-            'operario_id' => 'Operario',
+            'id' => Yii::t('app', 'ID'),
+            'cuba_id' => Yii::t('app', 'Cuba'),
+            'cubaNum' => Yii::t('app', 'Cuba'),
+            'operacion_id' => Yii::t('app', 'Operación'),
+            'nombreOperacion' => Yii::t('app', 'Operación'),
+            'fecha_operacion' => Yii::t('app', 'Fecha Operación'),
+            'descripcion' => Yii::t('app', 'Descripción'),
+            'operario_id' => Yii::t('app', 'Operario'),
+            'nombreOperario' => Yii::t('app', 'Operario'),
+
         ];
     }
 
@@ -60,6 +67,12 @@ class Operacion extends \yii\db\ActiveRecord
         return $this->hasOne(TipoOperacion::className(), ['id' => 'operacion_id']);
     }
 
+    /* Getter for operacion name*/
+    public function getNombreOperacion()
+    {
+        return $this->tipoOperacion->operacion;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -68,11 +81,23 @@ class Operacion extends \yii\db\ActiveRecord
         return $this->hasOne(Cuba::className(), ['id' => 'cuba_id']);
     }
 
+    /* Getter for cuba number*/
+    public function getCubaNum()
+    {
+        return $this->cuba->cuba;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getOperario()
     {
         return $this->hasOne(Operario::className(), ['id' => 'operario_id']);
+    }
+
+    /* Getter for operario name*/
+    public function getNombreOperario()
+    {
+        return $this->operario->apellidos . ', ' . $this->operario->nombre;
     }
 }

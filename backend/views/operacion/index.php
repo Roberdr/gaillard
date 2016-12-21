@@ -33,17 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'columns' => [
-                //['class' => 'yii\grid\SerialColumn'],
-    
-                'id',
-                [
-                    'attribute' => 'cuba_id',
-                    'value' => 'cuba.cuba',
-                ],
-                [
-                    'attribute' => 'operacion_id',
-                    'value' => 'tipoOperacion.operacion',
-                ],
+               'cubaNum',
+                'nombreOperacion',
                 [
                     'attribute' => 'fecha_operacion',
                     'value' => 'fecha_operacion',
@@ -59,10 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]),
                 ],
                 'descripcion:ntext',
-                [
-                    'attribute' => 'operario_id',
-                    'value' => 'operario.nombre',
-                ],
+                'nombreOperario',
     
                 ['class' => 'yii\grid\ActionColumn'],
             ],

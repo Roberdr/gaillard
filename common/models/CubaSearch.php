@@ -73,6 +73,7 @@ class CubaSearch extends Cuba
         ]);
 
         $dataProvider->setSort([
+            'defaultOrder' => ['cuba' => SORT_ASC],
             'attributes' =>[
                 'cuba',
                 'num_cuadro',
@@ -80,7 +81,7 @@ class CubaSearch extends Cuba
                     'asc' => ['material.material' => SORT_ASC],
                     'desc' => ['material.material' => SORT_DESC],
                     'label' => 'Material',
-                    //'default' => SORT_ASC
+                    'defaultOrder' => SORT_ASC
                 ],
                 'comps' => [
                     'asc' => ['numComp.comps' => SORT_ASC],
@@ -102,22 +103,6 @@ class CubaSearch extends Cuba
                 ],
             ],
         ]);
-
-
-        /*$query->joinWith([
-            'materialExterior',
-            'plataforma',
-        ],true ,[
-            'materialExterior' => 'LEFT JOIN',
-            'plataforma' => 'LEFT JOIN'
-        ]);*/
-
-        //$query->addSelect('*', 'COUNT("compartimentos.id") on ("compartimentos"."cuba_id" = "cuba"."id") as comps');
-
-
-
-
-
 
         if (!($this->load($params) && $this->validate())) {
             /**

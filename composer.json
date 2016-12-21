@@ -23,7 +23,7 @@
         "wbraganca/yii2-dynamicform": "dev-master",
         "kartik-v/yii2-detail-view": "*",
         "kartik-v/yii2-widgets": "*",
-        "twbs/bootstrap": "^3.3",
+        "twbs/bootstrap": "4.0.0-alpha.5",
         "kartik-v/yii2-grid": "@dev"
     },
     "require-dev": {

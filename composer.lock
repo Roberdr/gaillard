@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5e5f284bc08c0a78c66842e2821ffad0",
-    "content-hash": "47bbead17624fad54ab9d8ad59e69e19",
+    "hash": "7051e30ce83cbd14691a2e8824983930",
+    "content-hash": "08d78930879a0d55d7880d9d18e3d674",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -2059,16 +2059,16 @@
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v3.3.7",
+            "version": "v4.0.0-alpha.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "0b9c4a4007c44201dce9a6cc1a38407005c26c86"
+                "reference": "b5890e0608ad2262cde4a38e90afa19f1cb5d852"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/0b9c4a4007c44201dce9a6cc1a38407005c26c86",
-                "reference": "0b9c4a4007c44201dce9a6cc1a38407005c26c86",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/b5890e0608ad2262cde4a38e90afa19f1cb5d852",
+                "reference": "b5890e0608ad2262cde4a38e90afa19f1cb5d852",
                 "shasum": ""
             },
             "replace": {
@@ -2095,18 +2095,18 @@
                 }
             ],
             "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
-            "homepage": "http://getbootstrap.com",
+            "homepage": "https://getbootstrap.com",
             "keywords": [
                 "JS",
                 "css",
                 "framework",
                 "front-end",
-                "less",
                 "mobile-first",
                 "responsive",
+                "sass",
                 "web"
             ],
-            "time": "2016-07-25 15:51:55"
+            "time": "2016-10-19 15:30:27"
         },
         {
             "name": "wbraganca/yii2-dynamicform",
@@ -2714,6 +2714,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "wbraganca/yii2-dynamicform": 20,
+        "twbs/bootstrap": 15,
         "kartik-v/yii2-grid": 20
     },
     "prefer-stable": false,
